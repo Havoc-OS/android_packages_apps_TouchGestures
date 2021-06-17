@@ -17,6 +17,8 @@
 
 package com.android.touch.gestures;
 
+import static android.hardware.display.AmbientDisplayConfiguration.DOZE_NO_PROXIMITY_CHECK;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -312,14 +314,13 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void launchDozePulse() {
-        final boolean dozeEnabled = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.DOZE_ENABLED, 1) != 0;
         final boolean fodEnabled = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.SCREEN_OFF_FOD, 0) != 0;
-        if (dozeEnabled && !fodEnabled) {
+        if (!fodEnabled) {
             mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
             final Intent intent = new Intent(PULSE_ACTION);
-            mContext.sendBroadcastAsUser(intent, UserHandle.CURRENT);
+            intent.putExtra(DOZE_NO_PROXIMITY_CHECK, 1);
+            mContext.sendBroadcastAsUser(intent, new UserHandle(UserHandle.USER_CURRENT));
         }
     }
 
