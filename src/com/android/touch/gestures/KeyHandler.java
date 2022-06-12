@@ -314,14 +314,10 @@ public class KeyHandler implements DeviceKeyHandler {
     }
 
     private void launchDozePulse() {
-        final boolean fodEnabled = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.SCREEN_OFF_FOD, 0) != 0;
-        if (!fodEnabled) {
-            mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
-            final Intent intent = new Intent(PULSE_ACTION);
-            intent.putExtra(DOZE_NO_PROXIMITY_CHECK, 1);
-            mContext.sendBroadcastAsUser(intent, new UserHandle(UserHandle.USER_CURRENT));
-        }
+        mGestureWakeLock.acquire(GESTURE_WAKELOCK_DURATION);
+        final Intent intent = new Intent(PULSE_ACTION);
+        intent.putExtra(DOZE_NO_PROXIMITY_CHECK, 1);
+        mContext.sendBroadcastAsUser(intent, new UserHandle(UserHandle.USER_CURRENT));
     }
 
     private void wakeDevice() {
