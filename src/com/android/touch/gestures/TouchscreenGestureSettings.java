@@ -17,7 +17,6 @@
 
 package com.android.touch.gestures;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +27,6 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.view.MenuItem;
 
-import android.preference.PreferenceActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
@@ -37,12 +35,14 @@ import androidx.preference.PreferenceManager;
 import com.android.internal.custom.hardware.LineageHardwareManager;
 import com.android.internal.custom.hardware.TouchscreenGesture;
 
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
+
 import com.android.touch.gestures.R;
 import com.android.touch.gestures.utils.ResourceUtils;
 
 import java.lang.System;
 
-public class TouchscreenGestureSettings extends PreferenceActivity
+public class TouchscreenGestureSettings extends CollapsingToolbarBaseActivity
         implements PreferenceFragment.OnPreferenceStartFragmentCallback {
 
     @Override
@@ -51,7 +51,7 @@ public class TouchscreenGestureSettings extends PreferenceActivity
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, getNewFragment())
+                    .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, getNewFragment())
                     .commit();
         }
     }
@@ -63,8 +63,7 @@ public class TouchscreenGestureSettings extends PreferenceActivity
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragment preferenceFragment,
             Preference preference) {
-        Fragment instantiate = Fragment.instantiate(this, preference.getFragment(),
-            preference.getExtras());
+        Fragment instantiate = Fragment.instantiate(this, preference.getFragment(), preference.getExtras());
         getFragmentManager().beginTransaction().replace(
                 android.R.id.content, instantiate).addToBackStack(preference.getKey()).commit();
 
@@ -77,16 +76,11 @@ public class TouchscreenGestureSettings extends PreferenceActivity
         private static final String TOUCHSCREEN_GESTURE_TITLE = KEY_TOUCHSCREEN_GESTURE + "_%s_title";
 
         private TouchscreenGesture[] mTouchscreenGestures;
-        private ActionBar actionBar;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
             setPreferencesFromResource(R.xml.touchscreen_gesture_settings, rootKey);
-
-            actionBar = getActivity().getActionBar();
-            assert actionBar != null;
-            actionBar.setDisplayHomeAsUpEnabled(true);
 
             if (isTouchscreenGesturesSupported(getContext())) {
                 initTouchscreenGestures();
@@ -209,30 +203,5 @@ public class TouchscreenGestureSettings extends PreferenceActivity
             intent.setFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
             context.sendBroadcastAsUser(intent, UserHandle.CURRENT);
         }
-
-        @Override
-        public void onSaveInstanceState(Bundle outState) {
-            super.onSaveInstanceState(outState);
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-        }
-
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

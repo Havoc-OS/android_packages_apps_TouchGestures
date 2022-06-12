@@ -18,7 +18,8 @@
     <application
         android:label="@string/touchscreen_gesture_settings_title"
         android:persistent="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
 
         <receiver android:name=".BootReceiver" android:enabled="true">
             <intent-filter android:priority="999999">
@@ -28,9 +29,7 @@
 
         <activity
             android:name=".TouchscreenGestureSettings"
-            android:label="@string/touchscreen_gesture_settings_title"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:label="@string/touchscreen_gesture_settings_title" />
 
         <activity
             android:name=".ScreenOffLaunchGestureActivity"
